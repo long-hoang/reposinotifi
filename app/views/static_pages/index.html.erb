@@ -1,22 +1,18 @@
 <h1> Practice Javascript, Ajax,  & JSON </h1>
 
 <section>
-  <h1> Notifications </h1>
 
-    <section>
-      <ul id = "target" class = "notification-list">
+  <div class="btn-group">
+            <button class="btn btn-lg dropdown-toggle" id = "title"type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown button (0)
+            </button>
+            <div class="dropdown-menu keep-open notification-list" id = "target">
 
-        
-          <div>
-            <label> Notification message here! </label>
-          </div>
-
-        
-      </ul>
-    </section>
-
-
+            </div>
+        </div>
 </section>
+
+
 
 
 <section>
@@ -37,12 +33,13 @@
       $.get("/notifications").success( function(data){
       
       var htmlString = "";
-
+      counter = 0;
       $.each(data, function(index, notification){
         
         if (notification.read == false){
-          var notiElement = '<li  data-id = "'+notification.id+' ">' + notification.message + '</li>';
+          var notiElement = '<li class = "dropdown-item" data-id = "'+notification.id+' ">' + notification.message + '</li>';
           htmlString += notiElement;
+          counter += 1;
         }
 
       });
@@ -50,7 +47,9 @@
  
       var notis = $('.notification-list');
       notis.html(htmlString);
-  
+      
+      var buttontitle = $('#title');
+      buttontitle.html('Dropdown button (' + counter+')');
 
     });
   }
@@ -88,5 +87,23 @@
     });
     
   });
+
+
+
+jQuery('.dropdown-toggle').on('click', function (e) {
+  $(this).next().toggle();
+});
+jQuery('.dropdown-menu.keep-open').on('click', function (e) {
+  e.stopPropagation();
+});
+
+if(1) {
+  $('body').attr('tabindex', '0');
+}
+else {
+  alertify.confirm().set({'reverseButtons': true});
+  alertify.prompt().set({'reverseButtons': true});
+}
+
 
 </script>
