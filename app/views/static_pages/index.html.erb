@@ -1,0 +1,92 @@
+<h1> Practice Javascript, Ajax,  & JSON </h1>
+
+<section>
+  <h1> Notifications </h1>
+
+    <section>
+      <ul id = "target" class = "notification-list">
+
+        
+          <div>
+            <label> Notification message here! </label>
+          </div>
+
+        
+      </ul>
+    </section>
+
+
+</section>
+
+
+<section>
+  <button id = "thingy">Send a notification!</button>
+</section>
+
+
+
+<script>
+  $(function(){
+    showNoti();
+
+  });
+
+
+  function showNoti(){
+
+      $.get("/notifications").success( function(data){
+      
+      var htmlString = "";
+
+      $.each(data, function(index, notification){
+        
+        if (notification.read == false){
+          var notiElement = '<li  data-id = "'+notification.id+' ">' + notification.message + '</li>';
+          htmlString += notiElement;
+        }
+
+      });
+
+ 
+      var notis = $('.notification-list');
+      notis.html(htmlString);
+  
+
+    });
+  }
+
+
+    $("#target").click(function(event) {
+        var itemId = $(event.target).data("id");
+        console.log(itemId);
+
+        $.post("/notifications/"+itemId, {
+          _method: "PUT",
+          notification: {
+            read: true
+          }
+        }, function(data){
+            showNoti();
+        });
+
+
+    });
+
+
+  $('#thingy').click(function(){
+
+    var noti = {
+      notification: {
+        message: 'New Notification!'
+      }
+    };
+    
+
+    $.post("/notifications",noti,function(data){
+      console.log('done!');
+      showNoti();
+    });
+    
+  });
+
+</script>
